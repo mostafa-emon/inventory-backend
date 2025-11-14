@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-@Schema()
+@Schema({ timestamps: true })
 export class Company {
     @Prop({ required: true, unique: true })
     name: string;
 
-    @Prop({ required: false })
+    @Prop({ required: true })
     logo: string;
 
     @Prop({ required: true, default: true })

@@ -3,7 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Company, CompanySchema } from "src/schemas/company.schema";
 import { CompanyController } from "./company.controller";
 import { CompanyService } from "./company.service";
-import { FileUploadService } from "src/common/services/file-upload.service";
+import { FileHandlingService } from "src/common/services/file-handling.service";
 
 @Module({
     imports: [
@@ -17,7 +17,7 @@ import { FileUploadService } from "src/common/services/file-upload.service";
     ],
     providers: [
         CompanyService,
-        FileUploadService
+        FileHandlingService
     ]
 })
 

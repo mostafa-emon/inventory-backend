@@ -3,6 +3,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { Model, Types } from "mongoose";
 import { Company } from "src/schemas/company.schema";
+import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
+import { UpdateCompanyDto } from "./dto/update-company.dto";
 
 @Injectable()
 export class CompanyService {
@@ -17,10 +19,20 @@ export class CompanyService {
 
     async updateLogo(companyId: Types.ObjectId, fileURl: string) {
         const updatedCompany = await this.companyModel.findByIdAndUpdate(
-                                companyId,         
-                                { $set: { logo: fileURl } }, 
-                                { new: true }               
-                            );
+            companyId,         
+            { $set: { logo: fileURl } }, 
+            { new: true }               
+        );
+        return updatedCompany;
+    }
+
+    getCompanyById(id: ValidateObjectIdPipe) {
+        return this.companyModel.findById(id)
+        .select('name status invocePhone invoiceAddress invoiceEmail invoiceWebsite logo')
+    }
+
+    async updateCompany(id: ValidateObjectIdPipe, updateData: UpdateCompanyDto) {
+        const updatedCompany = await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
         return updatedCompany;
     }
 }
