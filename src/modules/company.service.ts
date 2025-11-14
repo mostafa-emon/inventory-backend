@@ -5,6 +5,7 @@ import { Model, Types } from "mongoose";
 import { Company } from "src/schemas/company.schema";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
+import { UpdateCompanyByUserDto } from "./dto/update-company-user.dto";
 
 @Injectable()
 export class CompanyService {
@@ -32,6 +33,11 @@ export class CompanyService {
     }
 
     async updateCompany(id: ValidateObjectIdPipe, updateData: UpdateCompanyDto) {
+        const updatedCompany = await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
+        return updatedCompany;
+    }
+
+    async updateCompanyByUser(id: ValidateObjectIdPipe, updateData: UpdateCompanyByUserDto) {
         const updatedCompany = await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
         return updatedCompany;
     }

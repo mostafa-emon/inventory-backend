@@ -1,16 +1,6 @@
-import { Transform } from "class-transformer";
-import { IsBoolean, IsEmail, IsOptional, IsString, ValidateIf } from "class-validator";
+import { IsEmail, IsOptional, IsString, ValidateIf } from "class-validator";
 
-export class UpdateCompanyDto {
-    @IsOptional()
-    @IsString()
-    name: string;
-
-    @Transform(({ value }) => value === 'true')
-    @IsOptional()
-    @IsBoolean()
-    status: boolean;
-
+export class UpdateCompanyByUserDto {
     @IsOptional()
     @IsString()
     invoicePhone: string;

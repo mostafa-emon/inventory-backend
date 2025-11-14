@@ -27,4 +27,8 @@ export class CreateCompanyDto {
     @IsOptional()
     @IsString()
     invoiceWebsite: string;
+
+    @IsOptional()
+    @IsString()
+    logo: string;
 }
