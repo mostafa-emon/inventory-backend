@@ -25,7 +25,7 @@ export class CompanyController {
             ],
             exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
       }),
-        ) logo?: Express.Multer.File
+        ) logo: Express.Multer.File
     ) {
         const company = await this.companyService.createCompany(createCompanyDto);
             
@@ -48,7 +48,7 @@ export class CompanyController {
             fileIsRequired: false,
             exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
       }),
-        ) logo?: Express.Multer.File
+        ) logo: Express.Multer.File
     ) {
         const findCompany = await this.companyService.getCompanyById(id);
         if(!findCompany) throw new HttpException('Company not Found!', 400);
