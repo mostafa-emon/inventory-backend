@@ -1,4 +1,4 @@
-import { Body, Controller, FileTypeValidator, HttpException, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, FileTypeValidator, HttpException, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { CompanyService } from "./company.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateCompanyDto } from "./dto/create-company.dto";
@@ -109,5 +109,20 @@ export class CompanyController {
                 return updatedCompany;
             }
         }   
+    }
+
+    @Delete(':id')
+    async deleteCompany (
+        @Param('id') id: ValidateObjectIdPipe
+    ) {
+        const findCompany = await this.companyService.getCompanyById(id);
+        if(!findCompany) throw new HttpException('Company not Found!', 400);
+
+        if(findCompany.logo && findCompany.logo != '') this.fileHandlingService.deleteFile(findCompany.logo);
+        /*
+            All Other Delete Actions will be placed here!
+        */
+        const deletedCompany = await this.companyService.deleteCompany(id);
+        return deletedCompany;
     }
 }

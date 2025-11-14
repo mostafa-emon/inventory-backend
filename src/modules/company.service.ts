@@ -13,8 +13,8 @@ export class CompanyService {
         @InjectModel(Company.name) private companyModel: Model<Company>
     ) {}
 
-    createCompany(createCompanyDto: CreateCompanyDto) {
-        const newCompany = new this.companyModel(createCompanyDto);
+    async createCompany(createCompanyDto: CreateCompanyDto) {
+        const newCompany = await new this.companyModel(createCompanyDto);
         return newCompany.save();
     }
 
@@ -29,7 +29,7 @@ export class CompanyService {
 
     getCompanyById(id: ValidateObjectIdPipe) {
         return this.companyModel.findById(id)
-        .select('name status invocePhone invoiceAddress invoiceEmail invoiceWebsite logo')
+            .select('name status invocePhone invoiceAddress invoiceEmail invoiceWebsite logo');
     }
 
     async updateCompany(id: ValidateObjectIdPipe, updateData: UpdateCompanyDto) {
@@ -40,5 +40,9 @@ export class CompanyService {
     async updateCompanyByUser(id: ValidateObjectIdPipe, updateData: UpdateCompanyByUserDto) {
         const updatedCompany = await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
         return updatedCompany;
+    }
+
+    deleteCompany(id: ValidateObjectIdPipe) {
+        return this.companyModel.findByIdAndDelete(id);
     }
 }
