@@ -17,7 +17,15 @@ export class CompanyController {
     @Post()
     async createCompany(
         @Body() createCompanyDto: CreateCompanyDto,
-        @UploadedFile() logo: Express.Multer.File
+        @UploadedFile(
+            new ParseFilePipe({
+            validators: [
+                new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
+                new MaxFileSizeValidator({ maxSize: 1 * 1024 * 1024 }),
+            ],
+            exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
+      }),
+        ) logo?: Express.Multer.File
     ) {
         const company = await this.companyService.createCompany(createCompanyDto);
             

@@ -5,7 +5,7 @@ export class Company {
     @Prop({ required: true, unique: true })
     name: string;
 
-    @Prop({ required: true })
+    @Prop({ required: false })
     logo: string;
 
     @Prop({ required: true, default: true })
