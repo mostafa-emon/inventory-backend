@@ -20,5 +20,5 @@ export class UpdateCompanyByUserDto {
 
     @IsOptional()
     @IsString()
-    logo: string;
+    logo?: string;
 }

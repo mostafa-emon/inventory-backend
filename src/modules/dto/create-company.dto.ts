@@ -30,5 +30,5 @@ export class CreateCompanyDto {
 
     @IsOptional()
     @IsString()
-    logo: string;
+    logo?: string;
 }
