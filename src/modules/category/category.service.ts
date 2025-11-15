@@ -5,7 +5,7 @@ import { Category } from "src/schemas/category.schema";
 import { CategoryDto } from "./dto/category.dto";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
 import { CategoryPaginationDto } from "./dto/category-pagination.dto";
-import { CategoryFilterDto } from "./dto/category-list.dto";
+import { CategoryFilterDto } from "./dto/category-filter.dto";
 
 @Injectable()
 export class CategoryService {
