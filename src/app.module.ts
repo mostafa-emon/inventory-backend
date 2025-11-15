@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CompanyModule } from './modules/company/company.module';
+import { CategoryModule } from './modules/category/category.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -9,15 +11,21 @@ import { CompanyModule } from './modules/company/company.module';
       envFilePath: '.env'
     }),
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [
+        ConfigModule
+      ],
       useFactory: async (configService: ConfigService) => ({
         uri: configService.get<string>("MONGODB_CONNECTION_STRING"),
       }),
-      inject: [ConfigService],
+      inject: [
+        ConfigService
+      ],
     }),
-    CompanyModule
+    CompanyModule,
+    CategoryModule
   ],
   controllers: [],
   providers: [],
 })
+
 export class AppModule {}

@@ -17,17 +17,11 @@ export class CompanyService {
         const isExists = await this.companyModel.findOne({ name: createCompanyDto.name});
         if(isExists) throw new HttpException('Company name already exists!', 400);
 
-        const newCompany = await new this.companyModel(createCompanyDto);
-        return newCompany.save();
+        return await new this.companyModel(createCompanyDto).save();
     }
 
     async updateLogo(companyId: Types.ObjectId, fileURl: string) {
-        const updatedCompany = await this.companyModel.findByIdAndUpdate(
-            companyId,         
-            { $set: { logo: fileURl } }, 
-            { new: true }               
-        );
-        return updatedCompany;
+        return await this.companyModel.findByIdAndUpdate(companyId, { $set: { logo: fileURl } }, { new: true });
     }
 
     getCompanyById(id: ValidateObjectIdPipe) {
@@ -39,16 +33,14 @@ export class CompanyService {
         const isExists = await this.companyModel.findOne({ name: updateData.name, _id: {$ne: id}});
         if(isExists) throw new HttpException('Company name already exists!', 400);
 
-        const updatedCompany = await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
-        return updatedCompany;
+        return await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
     }
 
     async updateCompanyByUser(id: ValidateObjectIdPipe, updateData: UpdateCompanyByUserDto) {
-        const updatedCompany = await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
-        return updatedCompany;
+        return await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
     }
 
-    deleteCompany(id: ValidateObjectIdPipe) {
-        return this.companyModel.findByIdAndDelete(id);
+    async deleteCompany(id: ValidateObjectIdPipe) {
+        return await this.companyModel.findByIdAndDelete(id);
     }
 }
