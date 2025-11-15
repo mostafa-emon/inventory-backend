@@ -1,5 +1,5 @@
 import { DeleteObjectCommand, PutObjectCommand, PutObjectCommandInput, PutObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
@@ -38,9 +38,9 @@ export class FileHandlingService {
             if(response.$metadata.httpStatusCode === 200) {
                 return key;
             }
-            throw new Error('File upload failed!');
+            throw new BadRequestException('File upload failed!');
         } catch (err) {
-            throw err;
+            throw new BadRequestException(err);
         }
     }
 
@@ -51,8 +51,8 @@ export class FileHandlingService {
                 Key: key, // file path in S3
             });
             await this.s3.send(command);
-        } catch (error) {
-            throw error;
+        } catch (err) {
+            throw new BadRequestException(err);
         }
     }
 }
