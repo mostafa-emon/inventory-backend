@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { Company } from "src/schemas/company.schema";
@@ -14,6 +14,9 @@ export class CompanyService {
     ) {}
 
     async createCompany(createCompanyDto: CreateCompanyDto) {
+        const isExists = await this.companyModel.findOne({ name: createCompanyDto.name});
+        if(isExists) throw new HttpException('Company name already exists!', 400);
+
         const newCompany = await new this.companyModel(createCompanyDto);
         return newCompany.save();
     }
@@ -33,6 +36,9 @@ export class CompanyService {
     }
 
     async updateCompany(id: ValidateObjectIdPipe, updateData: UpdateCompanyDto) {
+        const isExists = await this.companyModel.findOne({ name: updateData.name, _id: {$ne: id}});
+        if(isExists) throw new HttpException('Company name already exists!', 400);
+
         const updatedCompany = await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
         return updatedCompany;
     }
