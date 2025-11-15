@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, FileTypeValidator, HttpException, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { CompanyService } from "./company.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
 import { FileHandlingService } from "src/common/services/file-handling.service";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { UpdateCompanyByUserDto } from "./dto/update-company-user.dto";
+import { CompanyService } from "./company.service";
 
 @Controller('company')
 export class CompanyController {
@@ -24,15 +24,20 @@ export class CompanyController {
                 new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
                 new MaxFileSizeValidator({ maxSize: 1 * 1024 * 1024 }),
             ],
+            fileIsRequired: false,
             exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
       }),
         ) logo: Express.Multer.File
     ) {
         const company = await this.companyService.createCompany(createCompanyDto);
-            
-        const key = `inventory/company-logo/${company._id}`;
-        const fileUrl = await this.fileHandlingService.uploadFile(logo, key);
-        return this.companyService.updateLogo(company._id, fileUrl);
+        
+        if(logo) {
+            const key = `inventory/company-logo/${company._id}`;
+            const fileUrl = await this.fileHandlingService.uploadFile(logo, key);
+            return this.companyService.updateLogo(company._id, fileUrl);
+        } else {
+            return company;
+        }
     }
 
     @UseInterceptors(FileInterceptor('logo'))

@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { CreateCompanyDto } from "./dto/create-company.dto";
 import { Model, Types } from "mongoose";
 import { Company } from "src/schemas/company.schema";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
+import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { UpdateCompanyByUserDto } from "./dto/update-company-user.dto";
 
