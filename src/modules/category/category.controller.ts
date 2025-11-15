@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, HttpException, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, Param, Patch, Post, Query } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import { CategoryDto } from "./dto/category.dto";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
+import { CategoryPaginationDto } from "./dto/category-pagination.dto";
 
 @Controller('category')
 export class CategoryController {
@@ -36,5 +37,10 @@ export class CategoryController {
         const deletedCompany = await this.categorySerive.deleteCategory(id);
         if(!deletedCompany) throw new HttpException('Category Not Found!', 400);
         return deletedCompany;
+    }
+
+    @Get()
+    getCategoryByPagination(@Query() paginationDto: CategoryPaginationDto) {
+        return this.categorySerive.getCategoryByPagination(paginationDto);
     }
 }

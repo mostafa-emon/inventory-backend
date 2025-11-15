@@ -4,6 +4,7 @@ import { Model } from "mongoose";
 import { Category } from "src/schemas/category.schema";
 import { CategoryDto } from "./dto/category.dto";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
+import { CategoryPaginationDto } from "./dto/category-pagination.dto";
 
 @Injectable()
 export class CategoryService {
@@ -27,5 +28,29 @@ export class CategoryService {
 
     async deleteCategory(id: ValidateObjectIdPipe) {
         return await this.categoryModel.findByIdAndDelete(id);
+    }
+
+    async getCategoryByPagination(paginationDto: CategoryPaginationDto) {
+        const filter: any = {};
+        const page = paginationDto.page;
+        const limit = paginationDto.limit;
+
+        filter.companyId = paginationDto.companyId;
+        if(paginationDto.name) filter.name = { $regex: paginationDto.name, $options: 'i'};
+
+        const skip = (page - 1) * limit
+
+        const [data, total] = await Promise.all([
+            this.categoryModel.find(filter).skip(skip).limit(limit).exec(),
+            this.categoryModel.countDocuments(filter)
+        ]);
+
+        return {
+            items: data,
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / paginationDto.limit)
+        }
     }
 }
