@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, FileTypeValidator, HttpException, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, FileTypeValidator, Get, HttpException, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
@@ -6,6 +6,7 @@ import { FileHandlingService } from "src/common/services/file-handling.service";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { UpdateCompanyByUserDto } from "./dto/update-company-user.dto";
 import { CompanyService } from "./company.service";
+import { CompanyPaginationDto } from "./dto/company-pagination.dto";
 
 @Controller('company')
 export class CompanyController {
@@ -129,5 +130,17 @@ export class CompanyController {
         */
         const deletedCompany = await this.companyService.deleteCompany(id);
         return deletedCompany;
+    }
+
+    @Get(':id')
+    getCompanyById(
+        @Param('id') id: ValidateObjectIdPipe
+    ) {
+        return this.companyService.getCompanyById(id);
+    }
+
+    @Get()
+    getCompanyByPagination(@Query() paginationDto: CompanyPaginationDto) {
+        return this.companyService.getCompanyByPagination(paginationDto);
     }
 }

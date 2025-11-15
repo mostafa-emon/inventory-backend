@@ -6,6 +6,7 @@ import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { UpdateCompanyByUserDto } from "./dto/update-company-user.dto";
+import { CompanyPaginationDto } from "./dto/company-pagination.dto";
 
 @Injectable()
 export class CompanyService {
@@ -24,8 +25,8 @@ export class CompanyService {
         return await this.companyModel.findByIdAndUpdate(companyId, { $set: { logo: fileURl } }, { new: true });
     }
 
-    getCompanyById(id: ValidateObjectIdPipe) {
-        return this.companyModel.findById(id)
+    async getCompanyById(id: ValidateObjectIdPipe) {
+        return await this.companyModel.findById(id)
             .select('name status invocePhone invoiceAddress invoiceEmail invoiceWebsite logo');
     }
 
@@ -42,5 +43,29 @@ export class CompanyService {
 
     async deleteCompany(id: ValidateObjectIdPipe) {
         return await this.companyModel.findByIdAndDelete(id);
+    }
+
+    async getCompanyByPagination(paginationDto: CompanyPaginationDto) {
+        const filter: any = {};
+        const page = paginationDto.page;
+        const limit = paginationDto.limit;
+
+        if(paginationDto.name) filter.name = { $regex: paginationDto.name, $options: 'i'};
+        if(paginationDto.status !== undefined) filter.status = paginationDto.status;
+
+        const skip = (page - 1) * limit
+
+        const [data, total] = await Promise.all([
+            this.companyModel.find(filter).skip(skip).limit(limit).exec(),
+            this.companyModel.countDocuments(filter)
+        ]);
+
+        return {
+            items: data,
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total / paginationDto.limit)
+        }
     }
 }
