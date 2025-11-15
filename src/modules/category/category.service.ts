@@ -5,6 +5,7 @@ import { Category } from "src/schemas/category.schema";
 import { CategoryDto } from "./dto/category.dto";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
 import { CategoryPaginationDto } from "./dto/category-pagination.dto";
+import { CategoryFilterDto } from "./dto/category-list.dto";
 
 @Injectable()
 export class CategoryService {
@@ -52,5 +53,13 @@ export class CategoryService {
             limit,
             totalPages: Math.ceil(total / paginationDto.limit)
         }
+    }
+
+    async getCategoryByFilter(filterDto: CategoryFilterDto) {
+        const filter: any = {};
+        filter.companyId = filterDto.companyId;
+        if(filterDto.name) filter.name = { $regex: filterDto.name, $options: 'i'};
+
+        return await this.categoryModel.find(filter).select('name');
     }
 }

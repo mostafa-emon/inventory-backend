@@ -3,6 +3,7 @@ import { CategoryService } from "./category.service";
 import { CategoryDto } from "./dto/category.dto";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
 import { CategoryPaginationDto } from "./dto/category-pagination.dto";
+import { CategoryFilterDto } from "./dto/category-list.dto";
 
 @Controller('category')
 export class CategoryController {
@@ -43,4 +44,10 @@ export class CategoryController {
     getCategoryByPagination(@Query() paginationDto: CategoryPaginationDto) {
         return this.categorySerive.getCategoryByPagination(paginationDto);
     }
+
+    @Get('by-filter')
+    getCategoryByFilter(@Query() filterDto: CategoryFilterDto) {
+        return this.categorySerive.getCategoryByFilter(filterDto);
+    }
+
 }
