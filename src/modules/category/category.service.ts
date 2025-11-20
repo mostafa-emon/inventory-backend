@@ -14,16 +14,10 @@ export class CategoryService {
     ) {}
     
     async createCategory(categoryDto: CategoryDto) {
-        const isExists = await this.categoryModel.findOne({ name: categoryDto.name, companyId: categoryDto.companyId});
-        if(isExists) throw new HttpException('Category name already exists!', 400);
-
         return await new this.categoryModel(categoryDto).save();
     }
 
     async updateCategory(id: ValidateObjectIdPipe, categoryDto: CategoryDto) {
-        const isExists = await this.categoryModel.findOne({ name: categoryDto.name, companyId: categoryDto.companyId, _id: {$ne: id}});
-        if(isExists) throw new HttpException('Category name already exists!', 400);
-
         return await this.categoryModel.findByIdAndUpdate(id, categoryDto, {new: true});
     }
 

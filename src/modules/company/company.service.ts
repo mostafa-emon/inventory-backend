@@ -15,9 +15,6 @@ export class CompanyService {
     ) {}
 
     async createCompany(createCompanyDto: CreateCompanyDto) {
-        const isExists = await this.companyModel.findOne({ name: createCompanyDto.name});
-        if(isExists) throw new HttpException('Company name already exists!', 400);
-
         return await new this.companyModel(createCompanyDto).save();
     }
 
@@ -31,9 +28,6 @@ export class CompanyService {
     }
 
     async updateCompany(id: ValidateObjectIdPipe, updateData: UpdateCompanyDto) {
-        const isExists = await this.companyModel.findOne({ name: updateData.name, _id: {$ne: id}});
-        if(isExists) throw new HttpException('Company name already exists!', 400);
-
         return await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
     }
 
