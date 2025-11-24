@@ -68,7 +68,7 @@ export class CompanyService {
     }
 
     async createInitialCOmpany() {
-        const isExists = await this.companyModel.findOne({ name: 'Test Company'}).exec();
+        const isExists = await this.companyModel.findOne({ default: true }).exec();
         if(isExists) {
             return;
         }

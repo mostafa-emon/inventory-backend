@@ -11,7 +11,7 @@ export class Company {
     @Prop({ required: true, default: true })
     status: boolean;
 
-    @Prop({ required: true, default: false })
+    @Prop({ required: true, default: false, index: true })
     default: boolean;
 
     @Prop({ required: true })
