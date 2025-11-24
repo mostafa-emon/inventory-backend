@@ -30,7 +30,7 @@ export class CategoryService {
         const page = paginationDto.page;
         const limit = paginationDto.limit;
 
-        filter.companyId = paginationDto.companyId;
+        filter.company = paginationDto.company;
         if(paginationDto.name) filter.name = { $regex: paginationDto.name, $options: 'i'};
 
         const skip = (page - 1) * limit
@@ -51,7 +51,7 @@ export class CategoryService {
 
     async getCategoryByFilter(filterDto: CategoryFilterDto) {
         const filter: any = {};
-        filter.companyId = filterDto.companyId;
+        filter.company = filterDto.company;
         if(filterDto.name) filter.name = { $regex: filterDto.name, $options: 'i'};
 
         return await this.categoryModel.find(filter).select('name');

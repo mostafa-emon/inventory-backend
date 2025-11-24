@@ -1,8 +1,28 @@
 import { Prop, Schema } from "@nestjs/mongoose";
+import mongoose from "mongoose";
+import { Company } from "./company.schema";
 
 @Schema({ timestamps: true })
 
 export class User {
-    @Prop()
+    @Prop({ type: mongoose.Schema.ObjectId, ref: 'Company', required: true})
+    company: Company;
+
+    @Prop({ required: true })
     name: string;
+
+    @Prop()
+    designation: string;
+
+    @Prop({ required: true, unique: true })
+    email: string;
+
+    @Prop({ required: true })
+    password: string;
+
+    @Prop()
+    avatar: string;
+
+    @Prop({ required: true, default: true })
+    status: boolean;
 }

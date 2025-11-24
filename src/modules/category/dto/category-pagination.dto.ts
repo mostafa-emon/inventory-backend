@@ -4,7 +4,7 @@ import { IsMongoId, IsNotEmpty, IsOptional, IsPositive, IsString, MinLength, Val
 export class CategoryPaginationDto {
     @IsNotEmpty()
     @IsMongoId()
-    companyId: string;
+    company: string;
 
     @IsNotEmpty()
     @Type(() => Number)

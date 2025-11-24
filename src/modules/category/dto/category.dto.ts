@@ -3,7 +3,7 @@ import { IsMongoId, IsNotEmpty, IsString } from "class-validator";
 export class CategoryDto {
      @IsNotEmpty()
      @IsMongoId()
-     companyId: string;
+     company: string;
 
      @IsNotEmpty()
      @IsString()

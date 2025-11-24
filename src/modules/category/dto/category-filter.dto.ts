@@ -3,7 +3,7 @@ import { IsMongoId, IsNotEmpty, IsOptional, IsString, MinLength, ValidateIf } fr
 export class CategoryFilterDto {
     @IsNotEmpty()
     @IsMongoId()
-    companyId: string;
+    company: string;
 
     @ValidateIf((obj) => obj.name !== '')
     @IsOptional()
