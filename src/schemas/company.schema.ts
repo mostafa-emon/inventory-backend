@@ -11,6 +11,9 @@ export class Company {
     @Prop({ required: true, default: true })
     status: boolean;
 
+    @Prop({ required: true, default: false })
+    default: boolean;
+
     @Prop({ required: true })
     invoicePhone: string;
 

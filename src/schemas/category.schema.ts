@@ -4,8 +4,8 @@ import { Company } from "./company.schema";
 
 @Schema({ timestamps: true})
 export class Category {
-    @Prop({ type: mongoose.Schema.ObjectId, ref: Company.name, required: true})
-    companyId: mongoose.Types.ObjectId;
+    @Prop({ type: mongoose.Schema.ObjectId, ref: 'Company', required: true})
+    company: Company;
 
     @Prop({ required:true })
     name: string;

@@ -14,6 +14,10 @@ export class CompanyService {
         @InjectModel(Company.name) private companyModel: Model<Company>
     ) {}
 
+    async onModuleInit() {
+        await this.createInitialCOmpany();
+    }
+
     async createCompany(createCompanyDto: CreateCompanyDto) {
         return await new this.companyModel(createCompanyDto).save();
     }
@@ -61,5 +65,23 @@ export class CompanyService {
             limit,
             totalPages: Math.ceil(total / paginationDto.limit)
         }
+    }
+
+    async createInitialCOmpany() {
+        const isExists = await this.companyModel.findOne({ name: 'Test Company'}).exec();
+        if(isExists) {
+            return;
+        }
+
+        await this.companyModel.create({
+            name: 'Test Company',
+            status: true,
+            default: true,
+            invoicePhone: '01788090601',
+            invoiceAddress: 'Decent Tower, West Manikdi, Dhaka-1206',
+            invoiceEmail: 'contact.mmemon@gmail.com',
+            invoiceWebsite: '',
+            logo: ''
+        })
     }
 }
