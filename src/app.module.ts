@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CompanyModule } from './modules/company/company.module';
 import { CategoryModule } from './modules/category/category.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { CategoryModule } from './modules/category/category.module';
       ],
     }),
     CompanyModule,
-    CategoryModule
+    CategoryModule,
+    UserModule
   ],
   controllers: [],
   providers: [],
