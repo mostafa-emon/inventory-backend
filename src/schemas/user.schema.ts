@@ -5,7 +5,7 @@ import { Company } from "./company.schema";
 @Schema({ timestamps: true })
 
 export class User {
-    @Prop({ type: mongoose.Schema.ObjectId, ref: 'Company', required: true})
+    @Prop({ type: mongoose.Schema.ObjectId, ref: 'Company', required: true, index: true })
     company: Company;
 
     @Prop({ required: true })
