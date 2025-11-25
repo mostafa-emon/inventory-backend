@@ -7,10 +7,12 @@ import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
 import { UpdateCompanyByUserDto } from "./dto/update-company-user.dto";
 import { CompanyPaginationDto } from "./dto/company-pagination.dto";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class CompanyService {
     constructor(
+        private configService: ConfigService,
         @InjectModel(Company.name) private companyModel: Model<Company>
     ) {}
 
@@ -68,20 +70,16 @@ export class CompanyService {
     }
 
     async createInitialCOmpany() {
-        const isExists = await this.companyModel.findOne({ default: true }).exec();
-        if(isExists) {
-            return;
-        }
+        const isExists = await this.companyModel.findOne({ invoicePhone: this.configService.get<string>('DEFAULT_COMPANY_INVOICE_PHONE') }).exec();
+        if(isExists) return;
 
-        await this.companyModel.create({
-            name: 'Test Company',
-            status: true,
-            default: true,
-            invoicePhone: '01788090601',
-            invoiceAddress: 'Decent Tower, West Manikdi, Dhaka-1206',
-            invoiceEmail: 'contact.mmemon@gmail.com',
-            invoiceWebsite: '',
-            logo: ''
+        return await this.companyModel.create({
+            name: this.configService.get<string>('DEFAULT_COMPANY_NAME'),
+            status: this.configService.get<boolean>('DEFAULT_COMPANY_STATUS'),
+            invoicePhone: this.configService.get<boolean>('DEFAULT_COMPANY_INVOICE_PHONE'),
+            invoiceAddress: this.configService.get<boolean>('DEFAULT_COMPANY_INVOICE_ADDRESS'),
+            invoiceEmail: this.configService.get<boolean>('DEFAULT_COMPANY_INVOICE_EMAIL'),
+            invoiceWebsite: this.configService.get<boolean>('DEFAULT_COMPANY_INVOICE_WEBSITE')
         })
     }
 }
