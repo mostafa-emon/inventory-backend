@@ -48,13 +48,13 @@ export class CompanyService {
         const page = paginationDto.page;
         const limit = paginationDto.limit;
 
-        if(paginationDto.name) filter.name = { $regex: paginationDto.name, $options: 'i'};
+        if(paginationDto.name) filter.name = { $regex: `^${paginationDto.name}` };
         if(paginationDto.status !== undefined) filter.status = paginationDto.status;
 
         const skip = (page - 1) * limit
 
         const [data, total] = await Promise.all([
-            this.companyModel.find(filter).skip(skip).limit(limit).exec(),
+            this.companyModel.find(filter).skip(skip).limit(limit).select('name status invoicePhone invoiceAddress invoiceEmail invoiceWebsite -_id').exec(),
             this.companyModel.countDocuments(filter)
         ]);
 

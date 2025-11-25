@@ -12,4 +12,4 @@ export class Category {
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
-CategorySchema.index({ companyId: 1, name: 1 }, { unique: true });
+CategorySchema.index({ company: 1, name: 1 }, { unique: true });

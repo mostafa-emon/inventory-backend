@@ -31,12 +31,12 @@ export class CategoryService {
         const limit = paginationDto.limit;
 
         filter.company = paginationDto.company;
-        if(paginationDto.name) filter.name = { $regex: paginationDto.name, $options: 'i'};
+        if(paginationDto.name) filter.name = { $regex: `^${paginationDto.name}` };
 
         const skip = (page - 1) * limit
 
         const [data, total] = await Promise.all([
-            this.categoryModel.find(filter).skip(skip).limit(limit).exec(),
+            this.categoryModel.find(filter).skip(skip).limit(limit).select('name -_id').exec(),
             this.categoryModel.countDocuments(filter)
         ]);
 
@@ -52,8 +52,8 @@ export class CategoryService {
     async getCategoryByFilter(filterDto: CategoryFilterDto) {
         const filter: any = {};
         filter.company = filterDto.company;
-        if(filterDto.name) filter.name = { $regex: filterDto.name, $options: 'i'};
+        if(filterDto.name) filter.name = { $regex: `^${filterDto.name}` };
 
-        return await this.categoryModel.find(filter).select('name');
+        return await this.categoryModel.find(filter).select('name -_id');
     }
 }
