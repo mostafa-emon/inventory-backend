@@ -17,7 +17,7 @@ export class CompanyController {
 
     @UseInterceptors(FileInterceptor('logo'))
     @Post()
-    async createCompany(
+    async create(
         @Body() createCompanyDto: CreateCompanyDto,
         @UploadedFile(
             new ParseFilePipe({
@@ -30,7 +30,7 @@ export class CompanyController {
             }),
         ) logo: Express.Multer.File
     ) {
-        const company = await this.companyService.createCompany(createCompanyDto);
+        const company = await this.companyService.create(createCompanyDto);
         
         if(logo) {
             const key = `inventory/company-logo/${company._id}`;
@@ -41,23 +41,33 @@ export class CompanyController {
         }
     }
 
+    @Get()
+    findAllPagination(@Query() paginationDto: CompanyPaginationDto) {
+        return this.companyService.findAllPagination(paginationDto);
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: ValidateObjectIdPipe) {
+        return this.companyService.findOne(id);
+    }
+
     @UseInterceptors(FileInterceptor('logo'))
     @Patch(':id')
-    async updateCompany(
+    async update(
         @Param('id') id: ValidateObjectIdPipe,
         @Body() updateCompanyDto: UpdateCompanyDto,
         @UploadedFile(
             new ParseFilePipe({
-            validators: [
-                new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
-                new MaxFileSizeValidator({ maxSize: 1 * 1024 * 1024 }),
-            ],
-            fileIsRequired: false,
-            exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
-      }),
+                    validators: [
+                        new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
+                        new MaxFileSizeValidator({ maxSize: 1 * 1024 * 1024 }),
+                    ],
+                    fileIsRequired: false,
+                    exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
+            }),
         ) logo: Express.Multer.File
     ) {
-        const findCompany = await this.companyService.getCompanyById(id);
+        const findCompany = await this.companyService.findOne(id);
         if(!findCompany) throw new HttpException('Company not Found!', 400);
 
         if(logo) {
@@ -66,14 +76,14 @@ export class CompanyController {
             const key = `inventory/company-logo/${id.toString()}`;
             const fileUrl = await this.fileHandlingService.uploadFile(logo, key);
             const updateData = {...updateCompanyDto, logo: fileUrl}
-            return this.companyService.updateCompany(id, updateData);
+            return this.companyService.update(id, updateData);
         } else {
             if(findCompany.logo && findCompany.logo != '') {
                 const updateData = {...updateCompanyDto, logo: findCompany.logo}
-                const updatedCompany = this.companyService.updateCompany(id, updateData);
+                const updatedCompany = this.companyService.update(id, updateData);
                 return updatedCompany;
             } else {
-                const updatedCompany = this.companyService.updateCompany(id, updateCompanyDto);
+                const updatedCompany = this.companyService.update(id, updateCompanyDto);
                 return updatedCompany;
             }
         }   
@@ -81,21 +91,21 @@ export class CompanyController {
 
     @UseInterceptors(FileInterceptor('logo'))
     @Patch('update-by-user/:id')
-    async updateCompanyByUser(
+    async updateByUser(
         @Param('id') id: ValidateObjectIdPipe,
         @Body() updateCompanyByUserDto: UpdateCompanyByUserDto,
         @UploadedFile(
             new ParseFilePipe({
-            validators: [
-                new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
-                new MaxFileSizeValidator({ maxSize: 1 * 1024 * 1024 }),
-            ],
-            fileIsRequired: false,
-            exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
-      }),
+                    validators: [
+                        new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
+                        new MaxFileSizeValidator({ maxSize: 1 * 1024 * 1024 }),
+                    ],
+                    fileIsRequired: false,
+                    exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
+            }),
         ) logo: Express.Multer.File
     ) {
-        const findCompany = await this.companyService.getCompanyById(id);
+        const findCompany = await this.companyService.findOne(id);
         if(!findCompany) throw new HttpException('Company not Found!', 400);
 
         if(logo) {
@@ -104,43 +114,29 @@ export class CompanyController {
             const key = `inventory/company-logo/${id.toString()}`;
             const fileUrl = await this.fileHandlingService.uploadFile(logo, key);
             const updateData = {...updateCompanyByUserDto, logo: fileUrl}
-            return this.companyService.updateCompanyByUser(id, updateData);
+            return this.companyService.updateByUser(id, updateData);
         } else {
             if(findCompany.logo && findCompany.logo != '') {
                 const updateData = {...updateCompanyByUserDto, logo: findCompany.logo}
-                const updatedCompany = this.companyService.updateCompanyByUser(id, updateData);
+                const updatedCompany = this.companyService.updateByUser(id, updateData);
                 return updatedCompany;
             } else {
-                const updatedCompany = this.companyService.updateCompanyByUser(id, updateCompanyByUserDto);
+                const updatedCompany = this.companyService.updateByUser(id, updateCompanyByUserDto);
                 return updatedCompany;
             }
         }   
     }
 
     @Delete(':id')
-    async deleteCompany (
-        @Param('id') id: ValidateObjectIdPipe
-    ) {
-        const findCompany = await this.companyService.getCompanyById(id);
+    async remove(@Param('id') id: ValidateObjectIdPipe) {
+        const findCompany = await this.companyService.findOne(id);
         if(!findCompany) throw new HttpException('Company not Found!', 400);
 
         if(findCompany.logo && findCompany.logo != '') this.fileHandlingService.deleteFile(findCompany.logo);
         /*
             All Other Delete Actions will be placed here!
         */
-        const deletedCompany = await this.companyService.deleteCompany(id);
+        const deletedCompany = await this.companyService.remove(id);
         return deletedCompany;
-    }
-
-    @Get(':id')
-    getCompanyById(
-        @Param('id') id: ValidateObjectIdPipe
-    ) {
-        return this.companyService.getCompanyById(id);
-    }
-
-    @Get()
-    getCompanyByPagination(@Query() paginationDto: CompanyPaginationDto) {
-        return this.companyService.getCompanyByPagination(paginationDto);
     }
 }

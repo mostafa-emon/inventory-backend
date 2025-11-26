@@ -20,7 +20,7 @@ export class CompanyService {
         await this.createInitialCOmpany();
     }
 
-    async createCompany(createCompanyDto: CreateCompanyDto) {
+    async create(createCompanyDto: CreateCompanyDto) {
         return await new this.companyModel(createCompanyDto).save();
     }
 
@@ -28,24 +28,7 @@ export class CompanyService {
         return await this.companyModel.findByIdAndUpdate(companyId, { $set: { logo: fileURl } }, { new: true });
     }
 
-    async getCompanyById(id: ValidateObjectIdPipe) {
-        return await this.companyModel.findById(id)
-            .select('name status invoicePhone invoiceAddress invoiceEmail invoiceWebsite logo');
-    }
-
-    async updateCompany(id: ValidateObjectIdPipe, updateData: UpdateCompanyDto) {
-        return await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
-    }
-
-    async updateCompanyByUser(id: ValidateObjectIdPipe, updateData: UpdateCompanyByUserDto) {
-        return await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
-    }
-
-    async deleteCompany(id: ValidateObjectIdPipe) {
-        return await this.companyModel.findByIdAndDelete(id);
-    }
-
-    async getCompanyByPagination(paginationDto: CompanyPaginationDto) {
+    async findAllPagination(paginationDto: CompanyPaginationDto) {
         const filter: any = {};
         const page = paginationDto.page;
         const limit = paginationDto.limit;
@@ -67,6 +50,23 @@ export class CompanyService {
             limit,
             totalPages: Math.ceil(total / paginationDto.limit)
         }
+    }
+
+    async findOne(id: ValidateObjectIdPipe) {
+        return await this.companyModel.findById(id)
+            .select('name status invoicePhone invoiceAddress invoiceEmail invoiceWebsite logo');
+    }
+
+    async update(id: ValidateObjectIdPipe, updateData: UpdateCompanyDto) {
+        return await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
+    }
+
+    async updateByUser(id: ValidateObjectIdPipe, updateData: UpdateCompanyByUserDto) {
+        return await this.companyModel.findByIdAndUpdate(id, updateData, {new: true});
+    }
+
+    async remove(id: ValidateObjectIdPipe) {
+        return await this.companyModel.findByIdAndDelete(id);
     }
 
     async createInitialCOmpany() {

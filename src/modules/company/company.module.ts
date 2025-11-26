@@ -12,13 +12,8 @@ import { CompanyService } from "./company.service";
             schema: CompanySchema
         }])
     ],
-    controllers: [
-        CompanyController
-    ],
-    providers: [
-        CompanyService,
-        FileHandlingService
-    ]
+    controllers: [CompanyController],
+    providers: [CompanyService, FileHandlingService]
 })
 
 export class CompanyModule {}
