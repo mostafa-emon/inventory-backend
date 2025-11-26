@@ -30,7 +30,7 @@ export class CompanyService {
 
     async getCompanyById(id: ValidateObjectIdPipe) {
         return await this.companyModel.findById(id)
-            .select('name status invocePhone invoiceAddress invoiceEmail invoiceWebsite logo');
+            .select('name status invoicePhone invoiceAddress invoiceEmail invoiceWebsite logo');
     }
 
     async updateCompany(id: ValidateObjectIdPipe, updateData: UpdateCompanyDto) {
