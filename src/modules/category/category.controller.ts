@@ -50,4 +50,11 @@ export class CategoryController {
         return this.categorySerive.getCategoryByFilter(filterDto);
     }
 
+    @Get(':id')
+    getCategoryById(
+        @Param('id') id: ValidateObjectIdPipe
+    ) {
+        return this.categorySerive.getCategoryById(id);
+    }
+
 }

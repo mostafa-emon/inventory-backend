@@ -25,6 +25,11 @@ export class CategoryService {
         return await this.categoryModel.findByIdAndDelete(id);
     }
 
+    async getCategoryById(id: ValidateObjectIdPipe) {
+        return await this.categoryModel.findById(id)
+            .select('name');
+    }
+
     async getCategoryByPagination(paginationDto: CategoryPaginationDto) {
         const filter: any = {};
         const page = paginationDto.page;
