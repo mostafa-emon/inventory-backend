@@ -13,49 +13,39 @@ export class CategoryController {
     ) {}
 
     @Post()
-    createCategory(
-        @Body() createCategoryDto: CreateCategoryDto
-    ) {
-        return this.categorySerive.createCategory(createCategoryDto);
+    create(@Body() createCategoryDto: CreateCategoryDto) {
+        return this.categorySerive.create(createCategoryDto);
+    }
+
+    @Get()
+    findAllPagination(@Query() paginationDto: CategoryPaginationDto) {
+        return this.categorySerive.findAllPagination(paginationDto);
+    }
+
+    @Get('filter')
+    findAllFilter(@Query() filterDto: CategoryFilterDto) {
+        return this.categorySerive.findAllFilter(filterDto);
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id: ValidateObjectIdPipe) {
+        return this.categorySerive.findOne(id);
     }
 
     @Patch(':id')
-    async updateCategory(
-        @Param('id') id: ValidateObjectIdPipe,
-        @Body() updateCategoryDto: UpdateCategoryDto
-    ) {
-        const updatedCategory = await this.categorySerive.updateCategory(id, updateCategoryDto);
+    async update(@Param('id') id: ValidateObjectIdPipe, @Body() updateCategoryDto: UpdateCategoryDto) {
+        const updatedCategory = await this.categorySerive.update(id, updateCategoryDto);
         if(!updatedCategory) throw new HttpException('Category not found!', 400);
         return updatedCategory;
     }
 
     @Delete(':id')
-    async deleteCategory(
-        @Param('id') id: ValidateObjectIdPipe
-    ) {
-         /*
+    async remove(@Param('id') id: ValidateObjectIdPipe) {
+        /*
             All Other Delete Actions will be placed here!
         */
-        const deletedCategory = await this.categorySerive.deleteCategory(id);
+        const deletedCategory = await this.categorySerive.remove(id);
         if(!deletedCategory) throw new HttpException('Category Not Found!', 400);
         return deletedCategory;
     }
-
-    @Get()
-    getCategoryByPagination(@Query() paginationDto: CategoryPaginationDto) {
-        return this.categorySerive.getCategoryByPagination(paginationDto);
-    }
-
-    @Get('by-filter')
-    getCategoryByFilter(@Query() filterDto: CategoryFilterDto) {
-        return this.categorySerive.getCategoryByFilter(filterDto);
-    }
-
-    @Get(':id')
-    getCategoryById(
-        @Param('id') id: ValidateObjectIdPipe
-    ) {
-        return this.categorySerive.getCategoryById(id);
-    }
-
 }

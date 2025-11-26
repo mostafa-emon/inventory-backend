@@ -14,24 +14,11 @@ export class CategoryService {
         @InjectModel(Category.name) private categoryModel: Model<Category>
     ) {}
     
-    async createCategory(createCategoryDto: CreateCategoryDto) {
+    async create(createCategoryDto: CreateCategoryDto) {
         return await new this.categoryModel(createCategoryDto).save();
     }
 
-    async updateCategory(id: ValidateObjectIdPipe, updateCategoryDto: UpdateCategoryDto) {
-        return await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {new: true});
-    }
-
-    async deleteCategory(id: ValidateObjectIdPipe) {
-        return await this.categoryModel.findByIdAndDelete(id);
-    }
-
-    async getCategoryById(id: ValidateObjectIdPipe) {
-        return await this.categoryModel.findById(id)
-            .select('name');
-    }
-
-    async getCategoryByPagination(paginationDto: CategoryPaginationDto) {
+    async findAllPagination(paginationDto: CategoryPaginationDto) {
         const filter: any = {};
         const page = paginationDto.page;
         const limit = paginationDto.limit;
@@ -55,7 +42,7 @@ export class CategoryService {
         }
     }
 
-    async getCategoryByFilter(filterDto: CategoryFilterDto) {
+    async findAllFilter(filterDto: CategoryFilterDto) {
         const filter: any = {};
         filter.company = filterDto.company;
         if(filterDto.name) filter.name = { $regex: `^${filterDto.name}` };
@@ -63,13 +50,25 @@ export class CategoryService {
         return await this.categoryModel.find(filter).select('name');
 
         /*
-        const explain: any = await this.categoryModel.find(filter).select('name -_id').explain('executionStats');
-        const data = await this.categoryModel.find(filter).select('name -_id');
-        const { totalKeysExamined, totalDocsExamined } = explain.executionStats;
-        return {
-            metrics: { totalKeysExamined, totalDocsExamined },
-            data
-        };
+            const explain: any = await this.categoryModel.find(filter).select('name -_id').explain('executionStats');
+            const data = await this.categoryModel.find(filter).select('name -_id');
+            const { totalKeysExamined, totalDocsExamined } = explain.executionStats;
+            return {
+                metrics: { totalKeysExamined, totalDocsExamined },
+                data
+            };
         */
+    }
+
+    async findOne(id: ValidateObjectIdPipe) {
+        return await this.categoryModel.findById(id).select('name');
+    }
+
+    async update(id: ValidateObjectIdPipe, updateCategoryDto: UpdateCategoryDto) {
+        return await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {new: true});
+    }
+
+    async remove(id: ValidateObjectIdPipe) {
+        return await this.categoryModel.findByIdAndDelete(id);
     }
 }
