@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { User } from "src/schemas/user.schema";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { Company } from "src/schemas/company.schema";
@@ -20,6 +20,10 @@ export class UserService {
 
     async createUser(createUserDto: CreateUserDto) {
         return await new this.userModel(createUserDto).save();
+    }
+
+    async updateAvatar(userId: Types.ObjectId, fileURl: string) {
+        return await this.companyModel.findByIdAndUpdate(userId, { $set: { avatar: fileURl } }, { new: true });
     }
 
     async createInitialUser() {
