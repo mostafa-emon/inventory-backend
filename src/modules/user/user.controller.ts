@@ -15,7 +15,7 @@ export class UserController {
 
     @UseInterceptors(FileInterceptor('avatar'))
     @Post()
-    async createUser(
+    async create(
         @Body() createUserDto: CreateUserDto,
         @UploadedFile(
             new ParseFilePipe({
@@ -28,7 +28,7 @@ export class UserController {
             }),
         ) avatar: Express.Multer.File
     ) {
-        const user = await this.userService.createUser(createUserDto);
+        const user = await this.userService.create(createUserDto);
 
         if(avatar) {
             const key = `inventory/user/${user._id}`;
@@ -39,20 +39,25 @@ export class UserController {
         }
     }
 
+    @Get(':id')
+    findOne(@Param('id') id: ValidateObjectIdPipe) {
+        return this.userService.findOne(id);
+    }
+
     @UseInterceptors(FileInterceptor('avatar'))
     @Patch(':id')
-    async updateCompanyByUser(
+    async update(
         @Param('id') id: ValidateObjectIdPipe,
         @Body() updateUserDto: UpdateUserDto,
         @UploadedFile(
             new ParseFilePipe({
-            validators: [
-                new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
-                new MaxFileSizeValidator({ maxSize: 1 * 1024 * 1024 }),
-            ],
-            fileIsRequired: false,
-            exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
-        }),
+                validators: [
+                    new FileTypeValidator({ fileType: /(jpg|jpeg|png)$/ }),
+                    new MaxFileSizeValidator({ maxSize: 1 * 1024 * 1024 }),
+                ],
+                fileIsRequired: false,
+                exceptionFactory: (errors) => new HttpException('Logo must be PNG/JPG/JPEG under 1MB', 400),
+            }),
         ) avatar: Express.Multer.File
     ) {
         const findUser = await this.userService.findOne(id);
@@ -75,12 +80,5 @@ export class UserController {
                 return updatedUser;
             }
         }   
-    }
-
-    @Get(':id')
-    findOne(
-        @Param('id') id: ValidateObjectIdPipe
-    ) {
-        return this.userService.findOne(id);
     }
 }

@@ -19,8 +19,8 @@ import { FileHandlingService } from "src/common/services/file-handling.service";
             }
         ]),
     ],
-    controllers: [ UserController ],
-    providers: [ UserService, FileHandlingService ]
+    controllers: [UserController],
+    providers: [UserService, FileHandlingService]
 })
 
 export class UserModule {}

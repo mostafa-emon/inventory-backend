@@ -21,7 +21,7 @@ export class UserService {
         await this.createInitialUser();
     }
 
-    async createUser(createUserDto: CreateUserDto) {
+    async create(createUserDto: CreateUserDto) {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
 
@@ -36,8 +36,7 @@ export class UserService {
     }
 
     async findOne(id: ValidateObjectIdPipe) {
-        return await this.userModel.findById(id)
-            .select('name designation phone email permissions avatar status');
+        return await this.userModel.findById(id).select('name designation phone email permissions avatar status');
     }
 
     async update(id: ValidateObjectIdPipe, updateData: UpdateUserDto) {
