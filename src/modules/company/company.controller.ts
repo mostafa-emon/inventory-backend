@@ -35,7 +35,7 @@ export class CompanyController {
         if(logo) {
             const key = `inventory/company-logo/${company._id}`;
             const fileUrl = await this.fileHandlingService.uploadFile(logo, key);
-            return this.companyService.updateLogo(company._id, fileUrl);
+            return await this.companyService.updateLogo(company._id, fileUrl);
         } else {
             return company;
         }

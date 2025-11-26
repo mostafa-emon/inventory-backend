@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { IsArray, IsBoolean, IsEmail, IsMongoId, IsNotEmpty, IsOptional, IsString, Matches, MinLength } from "class-validator";
 
 export class CreateUserDto {
@@ -29,13 +30,25 @@ export class CreateUserDto {
     password: string;
 
     @IsOptional()
-    avatar: string;
+    @IsString()
+    avatar?: string;
 
     @IsArray()
     @IsString({ each: true })
+    @Transform(({ value }) => {
+        if (typeof value === 'string') {
+        try {
+            return JSON.parse(value);
+        } catch {
+            return value;
+        }
+        }
+        return value;
+    })
     permissions: string[];
 
-    @IsBoolean()
+    @Transform(({ value }) => value === 'true')
     @IsNotEmpty()
+    @IsBoolean()
     status: boolean;
 }
