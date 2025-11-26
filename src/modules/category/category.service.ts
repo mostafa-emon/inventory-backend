@@ -2,10 +2,11 @@ import { HttpException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Category } from "src/schemas/category.schema";
-import { CategoryDto } from "./dto/category.dto";
 import { ValidateObjectIdPipe } from "src/common/validations/validate-object-id.pipe";
 import { CategoryPaginationDto } from "./dto/category-pagination.dto";
 import { CategoryFilterDto } from "./dto/category-filter.dto";
+import { CreateCategoryDto } from "./dto/create-category.dto";
+import { UpdateCategoryDto } from "./dto/update-category.dto";
 
 @Injectable()
 export class CategoryService {
@@ -13,12 +14,12 @@ export class CategoryService {
         @InjectModel(Category.name) private categoryModel: Model<Category>
     ) {}
     
-    async createCategory(categoryDto: CategoryDto) {
-        return await new this.categoryModel(categoryDto).save();
+    async createCategory(createCategoryDto: CreateCategoryDto) {
+        return await new this.categoryModel(createCategoryDto).save();
     }
 
-    async updateCategory(id: ValidateObjectIdPipe, categoryDto: CategoryDto) {
-        return await this.categoryModel.findByIdAndUpdate(id, categoryDto, {new: true});
+    async updateCategory(id: ValidateObjectIdPipe, updateCategoryDto: UpdateCategoryDto) {
+        return await this.categoryModel.findByIdAndUpdate(id, updateCategoryDto, {new: true});
     }
 
     async deleteCategory(id: ValidateObjectIdPipe) {
