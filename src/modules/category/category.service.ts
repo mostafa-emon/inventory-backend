@@ -36,7 +36,7 @@ export class CategoryService {
         const skip = (page - 1) * limit
 
         const [data, total] = await Promise.all([
-            this.categoryModel.find(filter).skip(skip).limit(limit).select('name -_id').exec(),
+            this.categoryModel.find(filter).skip(skip).limit(limit).select('name').exec(),
             this.categoryModel.countDocuments(filter)
         ]);
 
@@ -54,6 +54,16 @@ export class CategoryService {
         filter.company = filterDto.company;
         if(filterDto.name) filter.name = { $regex: `^${filterDto.name}` };
 
-        return await this.categoryModel.find(filter).select('name -_id');
+        return await this.categoryModel.find(filter).select('name');
+
+        /*
+        const explain: any = await this.categoryModel.find(filter).select('name -_id').explain('executionStats');
+        const data = await this.categoryModel.find(filter).select('name -_id');
+        const { totalKeysExamined, totalDocsExamined } = explain.executionStats;
+        return {
+            metrics: { totalKeysExamined, totalDocsExamined },
+            data
+        };
+        */
     }
 }

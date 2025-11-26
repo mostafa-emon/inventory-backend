@@ -56,7 +56,7 @@ export class CompanyService {
         const skip = (page - 1) * limit
 
         const [data, total] = await Promise.all([
-            this.companyModel.find(filter).skip(skip).limit(limit).select('name status invoicePhone invoiceAddress invoiceEmail invoiceWebsite -_id').exec(),
+            this.companyModel.find(filter).skip(skip).limit(limit).select('name status invoicePhone invoiceAddress invoiceEmail invoiceWebsite').sort({ name: 1 }).exec(),
             this.companyModel.countDocuments(filter)
         ]);
 
