@@ -70,4 +70,8 @@ export class UserService {
             status: this.configService.get<string>('DEFAULT_USER_STATUS'),
         })
     }
+
+    async remove(id: ValidateObjectIdPipe) {
+        return await this.userModel.findByIdAndDelete(id);
+    }
 }

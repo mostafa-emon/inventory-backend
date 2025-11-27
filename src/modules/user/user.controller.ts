@@ -1,4 +1,4 @@
-import { Body, Controller, FileTypeValidator, Get, HttpException, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, FileTypeValidator, Get, HttpException, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -80,5 +80,15 @@ export class UserController {
                 return updatedUser;
             }
         }   
+    }
+
+    @Delete(':id')
+    async remove(@Param('id') id: ValidateObjectIdPipe) {
+        /*
+            All Other Delete Actions will be placed here!
+        */
+        const deletedUser = await this.userService.remove(id);
+        if(!deletedUser) throw new HttpException('User Not Found!', 400);
+        return deletedUser;
     }
 }
